@@ -1,0 +1,19 @@
+server:
+  port: 8082
+  shutdown: graceful
+spring:
+  profiles:
+    active: ${active-profiles:production}
+  application:
+    name: service-two
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true

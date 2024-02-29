@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    active: ${active-profiles:production}
+  application:
+    name: service-one
+server:
+  port: 8081
+  shutdown: graceful
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    info:
+      enabled: true
+  info:
+    env:
+      enabled: true
