@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-two
+  labels:
+    app: service-two
+    service: service-two
+spec:
+  ports:
+    - port: 80
+      name: http
+      targetPort: 8082
+  selector:
+    app: service-two
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: myapp-service-two
+  labels:
+    account: service-two
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-two
+  labels:
+    app: service-two
+    version: v1
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: service-two
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: service-two
+        version: v1
+    spec:
+      serviceAccountName: myapp-service-two
+      containers:
+        - name: service-two
+          image: arnelyutiga/images:service-two
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8082
+          startupProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: 8082
+            failureThreshold: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: "/actuator/health/liveness"
+              port: 8082
+            failureThreshold: 3
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: "/actuator/health/readiness"
+              port: 8082
+            failureThreshold: 2
+            periodSeconds: 10
+          lifecycle:
+            preStop:
+              exec:
+                command: ["sh", "-c", "sleep 10"]
+      imagePullSecrets:
+        - name: my-registry-secret
