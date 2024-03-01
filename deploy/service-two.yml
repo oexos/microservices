@@ -68,5 +68,8 @@ spec:
             preStop:
               exec:
                 command: ["sh", "-c", "sleep 10"]
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: production
       imagePullSecrets:
         - name: my-registry-secret
