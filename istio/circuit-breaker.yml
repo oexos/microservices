@@ -14,5 +14,5 @@ spec:
     outlierDetection:
       consecutive5xxErrors: 1
       interval: 1s
-      baseEjectionTime: 30s
+      baseEjectionTime: 1m
       maxEjectionPercent: 100
